@@ -1,5 +1,4 @@
 #pragma once
-#define ORYX_CONFIGURATOR
 
 #define CHORDAL_HOLD
 #define PERMISSIVE_HOLD
