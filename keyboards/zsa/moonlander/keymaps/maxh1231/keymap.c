@@ -20,6 +20,7 @@ enum tap_dance_codes { DFM, DFW };
 #define SFT_D MT(MOD_LSFT, KC_D)
 #define SFT_K MT(MOD_RSFT, KC_K)
 #define ALT_SCN MT(MOD_RALT, KC_SCLN)
+#define CTL_QUT MT(MOD_RCTL, KC_QUOT)
 // layer mods
 #define LNUM_F LT(NUM, KC_F)
 #define LNAV_J LT(NAV, KC_J)
@@ -36,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC] = LAYOUT(
         XXXXXXX,   KC_1,   KC_2,   KC_3,   KC_4,   KC_5,XXXXXXX,       XXXXXXX,   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,TD(DFW),
         KC_TAB,    KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,XXXXXXX,       XXXXXXX,   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,KC_BSLS,
-        CTL_ESC,  ALT_A,   KC_S,  SFT_D, LNUM_F,   KC_G,XXXXXXX,       XXXXXXX,   KC_H, LNAV_J,  SFT_K,   KC_L,ALT_SCN,KC_QUOT,
+        CTL_ESC,  ALT_A,   KC_S,  SFT_D, LNUM_F,   KC_G,XXXXXXX,       XXXXXXX,   KC_H, LNAV_J,  SFT_K,   KC_L,ALT_SCN,CTL_QUT,
         KC_LSFT,   KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,                          KC_N,   KC_M,KC_COMM, KC_DOT,KC_SLSH,XXXXXXX,
         XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,KC_LGUI,XXXXXXX,                       XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
                                         LSYM_BS, KC_DEL,XXXXXXX,        TMUX_L, KC_ENT, KC_SPC
@@ -63,16 +64,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [NUM] = LAYOUT(
         _______,_______,_______,_______,_______,_______,_______,      _______,_______, KC_TAB,KC_PSLS,KC_PAST,KC_MINS,_______,
         _______,_______,_______,_______,_______,_______,_______,      _______,_______,   KC_7,   KC_8,   KC_9,KC_PLUS,_______,
-        _______,_______,_______,_______,_______,_______,_______,      _______,_______,   KC_4,   KC_5,   KC_6, KC_ENT,_______,
+        _______,_______,_______,_______,_______,_______,_______,      _______,_______,   KC_4,   KC_5,   KC_6,KC_PLUS,_______,
         _______,_______,_______,_______,_______,_______,                      _______,   KC_1,   KC_2,   KC_3, KC_ENT,_______,
-        _______,_______,_______,_______,_______,_______,                      _______,   KC_0,_______, KC_DOT,_______,_______,
+        _______,_______,_______,_______,_______,_______,                      _______,   KC_0,   KC_0, KC_DOT, KC_ENT,_______,
                                         _______,_______,_______,      _______,_______,_______
     ),
 
     [NAV] = LAYOUT(
         _______,_______,  MEDPT,  MEDPP,  MEDNT,_______,_______,      _______,_______,_______,_______,_______,_______,_______,
         _______,_______,_______,  KC_UP,_______,_______,_______,      _______,_______,_______,_______,_______,_______,_______,
-        _______,_______,KC_LEFT,KC_DOWN,KC_RGHT,_______,_______,      _______,_______,_______,KC_RSFT,_______,KC_RALT,KC_RCTL,
+        _______,_______,KC_LEFT,KC_DOWN,KC_RGHT,_______,_______,      _______,_______,_______,KC_RSFT,_______,KC_RALT,CTL_ESC,
         _______,_______,_______,_______,_______,_______,                      _______,_______,_______,_______,_______,_______,
         _______,_______,_______,_______,_______,_______,                      _______,_______,_______,_______,_______,_______,
                                         _______,_______,_______,      _______,_______,_______
@@ -156,10 +157,10 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
-              {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
-              {0,0,0}, {144,200,255}, {144,200,255}, {144,200,255},       {0,0,0},
-              {0,0,0}, {144,200,255}, {144,200,255}, {144,200,255},       {0,0,0},
-              {0,0,0}, {144,200,255}, {144,200,255}, {144,200,255}, {144,200,255},
+         {46,255,255},  {74,255,246},  {74,255,246},   {0,255,255},   {0,255,255},
+        {255,180,255}, {144,200,255}, {144,200,255}, {144,200,255},     {0,0,255},
+        {170,255,255}, {144,200,255}, {144,200,255}, {144,200,255}, {144,200,255},
+        {210,180,255}, {144,200,255}, {144,200,255}, {144,200,255}, {144,200,255},
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0}
     },
@@ -314,7 +315,7 @@ void dance_1_reset(tap_dance_state_t *state, void *user_data) {
 }
 
 tap_dance_action_t tap_dance_actions[] = {
-        [DFM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_0_finished, dance_0_reset),
-        [DFW] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_1_finished, dance_1_reset),
+        [DFW] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_0_finished, dance_0_reset),
+        [DFM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_1_finished, dance_1_reset),
 };
 
