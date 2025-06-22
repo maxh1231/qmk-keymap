@@ -6,6 +6,8 @@
 #define QUICK_TAP_TERM 120
 #define FLOW_TAP_TERM 125
 
+#define SELECT_WORD_OS_MAC
+
 #define USB_SUSPEND_WAKEUP_DELAY 0
 #define SERIAL_NUMBER "xdOdo/m5qM6V"
 #define LAYER_STATE_8BIT

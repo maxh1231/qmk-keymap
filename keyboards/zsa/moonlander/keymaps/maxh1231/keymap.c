@@ -1,3 +1,5 @@
+#include "features/select_word.h"
+#include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
 #include "version.h"
 #define MOON_LED_LEVEL LED_LEVEL
@@ -11,7 +13,7 @@ enum layers {
     NAV,
 };
 
-enum custom_keycodes { RGB_SLD = SAFE_RANGE, ST_MACRO_0 };
+enum custom_keycodes { RGB_SLD = SAFE_RANGE, SELWFWD, SELWBAK, SELLINE, ST_MACRO_0 };
 enum tap_dance_codes { DFM, DFW };
 
 // home row mods
@@ -31,6 +33,14 @@ enum tap_dance_codes { DFM, DFW };
 #define MEDPT KC_MEDIA_PREV_TRACK
 #define MEDNT KC_MEDIA_NEXT_TRACK
 #define MEDPP KC_MEDIA_PLAY_PAUSE
+
+const key_override_t   only_bktk     = ko_make_with_layers(MOD_MASK_SHIFT, KC_GRV, KC_GRV, (1U << SYMB));
+const key_override_t   only_eql      = ko_make_with_layers(MOD_MASK_SHIFT, KC_EQL, KC_EQL, (1U << SYMB));
+const key_override_t   only_mins     = ko_make_with_layers(MOD_MASK_SHIFT, KC_MINS, KC_MINS, (1U << SYMB));
+const key_override_t   only_lbrc     = ko_make_with_layers(MOD_MASK_SHIFT, KC_LBRC, KC_LBRC, (1U << SYMB));
+const key_override_t   only_rbrc     = ko_make_with_layers(MOD_MASK_SHIFT, KC_RBRC, KC_RBRC, (1U << SYMB));
+const key_override_t   only_scln     = ko_make_with_layers(MOD_MASK_SHIFT, KC_SCLN, KC_SCLN, (1U << SYMB));
+const key_override_t **key_overrides = (const key_override_t *[]){&only_bktk, &only_eql, &only_mins, &only_lbrc, &only_rbrc, &only_scln, NULL};
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -74,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,_______,  MEDPT,  MEDPP,  MEDNT,_______,_______,      _______,_______,_______,_______,_______,_______,_______,
         _______,_______,_______,  KC_UP,_______,_______,_______,      _______,_______,_______,_______,_______,_______,_______,
         _______,_______,KC_LEFT,KC_DOWN,KC_RGHT,_______,_______,      _______,_______,_______,KC_RSFT,_______,KC_RALT,CTL_ESC,
-        _______,_______,_______,_______,_______,_______,                      _______,_______,_______,_______,_______,_______,
+        _______,_______,SELWBAK,SELLINE,SELWFWD,_______,                      _______,_______,_______,_______,_______,_______,
         _______,_______,_______,_______,_______,_______,                      _______,_______,_______,_______,_______,_______,
                                         _______,_______,_______,      _______,_______,_______
     ),
@@ -168,9 +178,9 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
     [NAV] = {
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
-         {24,246,235},       {0,0,0},  {24,246,235},       {0,0,0},       {0,0,0},
-         {24,246,235},  {24,246,235},  {24,246,235},       {0,0,0},       {0,0,0},
-         {24,246,235},       {0,0,0},  {24,246,235},       {0,0,0},       {0,0,0},
+         {24,246,235},       {0,0,0},  {24,246,235},       {0,0,255},       {0,0,0},
+         {24,246,235},  {24,246,235},  {24,246,235},       {0,0,255},       {0,0,0},
+         {24,246,235},       {0,0,0},  {24,246,235},       {0,0,255},       {0,0,0},
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
               {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},       {0,0,0},
@@ -230,15 +240,41 @@ bool rgb_matrix_indicators_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_select_word(keycode, record)) { return false; }
     switch (keycode) {
+        case SELWBAK:  // Backward word selection.
+            if (record->event.pressed) {
+                select_word_register('B');
+            } else {
+                select_word_unregister();
+            }
+            break;
+
+        case SELWFWD:  // Forward word selection.
+            if (record->event.pressed) {
+                select_word_register('W');
+            } else {
+                select_word_unregister();
+            }
+            break;
+
+        case SELLINE:  // Line selection.
+            if(record->event.pressed) {
+                select_word_register('L');
+            } else {
+                select_word_unregister();
+            }
+            break;
+
         case ST_MACRO_0:
             if (record->event.pressed) {
                 SEND_STRING(
                 SS_TAP(X_D)SS_DELAY(25) SS_LSFT(SS_TAP(X_R))SS_DELAY(25) SS_TAP(X_C)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_5))SS_DELAY(25)                                                     SS_LSFT(SS_TAP(X_MINUS))SS_DELAY(25) SS_TAP(X_B)SS_DELAY(25) SS_TAP(X_1)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_F))SS_DELAY(25)
                 SS_TAP(X_5)SS_DELAY(25) SS_TAP(X_Y)
-                );
+            );
             }
             break;
+
         case RGB_SLD:
             if (rawhid_state.rgb_control) {
                 return false;
