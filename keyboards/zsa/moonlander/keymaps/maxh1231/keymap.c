@@ -13,22 +13,19 @@ enum layers {
     NAV,
 };
 
-enum custom_keycodes { RGB_SLD = SAFE_RANGE, SELWFWD, SELWBAK, SELLINE, ST_MACRO_0 };
+enum custom_keycodes { RGB_SLD = SAFE_RANGE, SELWFWD, SELWBAK, SELLINE, ST_MACRO_0, TMUX_L };
 enum tap_dance_codes { DFM, DFW };
 
 // home row mods
 #define CTL_ESC MT(MOD_LCTL, KC_ESC)
 #define ALT_A MT(MOD_LALT, KC_A)
-#define SFT_D MT(MOD_LSFT, KC_D)
-#define SFT_K MT(MOD_RSFT, KC_K)
 #define ALT_SCN MT(MOD_RALT, KC_SCLN)
 #define CTL_QUT MT(MOD_RCTL, KC_QUOT)
 // layer mods
-#define LNUM_F LT(NUM, KC_F)
-#define LNAV_J LT(NAV, KC_J)
 #define LSYM_BS LT(SYMB, KC_BSPC)
 // tmux leader
-#define TMUX_L LCTL(KC_A)
+#define LNUM_TM LT(NUM, KC_P)
+#define LTHMB LT(NUM, KC_NO)
 // media keys
 #define MEDPT KC_MEDIA_PREV_TRACK
 #define MEDNT KC_MEDIA_NEXT_TRACK
@@ -49,10 +46,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC] = LAYOUT(
         XXXXXXX,   KC_1,   KC_2,   KC_3,   KC_4,   KC_5,XXXXXXX,       XXXXXXX,   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,TD(DFW),
         KC_TAB,    KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,XXXXXXX,       XXXXXXX,   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,KC_BSLS,
-        CTL_ESC,  ALT_A,   KC_S,  SFT_D, LNUM_F,   KC_G,XXXXXXX,       XXXXXXX,   KC_H, LNAV_J,  SFT_K,   KC_L,ALT_SCN,CTL_QUT,
+        CTL_ESC,  ALT_A,   KC_S,   KC_D,   KC_F,   KC_G,XXXXXXX,       XXXXXXX,   KC_H,   KC_J,   KC_K,   KC_L,ALT_SCN,CTL_QUT,
         KC_LSFT,   KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,                          KC_N,   KC_M,KC_COMM, KC_DOT,KC_SLSH,XXXXXXX,
         XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,KC_LGUI,XXXXXXX,                       XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
-                                        LSYM_BS, KC_DEL,XXXXXXX,        TMUX_L, KC_ENT, KC_SPC
+                                        LSYM_BS, KC_DEL,  LTHMB,       LNUM_TM, KC_ENT, KC_SPC
     ),
 
     [WIN] = LAYOUT(
@@ -77,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,_______,_______,_______,_______,_______,_______,      _______,_______, KC_TAB,KC_PSLS,KC_PAST,KC_MINS,_______,
         _______,_______,_______,_______,_______,_______,_______,      _______,_______,   KC_7,   KC_8,   KC_9,KC_PLUS,_______,
         _______,_______,_______,_______,_______,_______,_______,      _______,_______,   KC_4,   KC_5,   KC_6,KC_PLUS,_______,
-        _______,_______,_______,_______,_______,_______,                      _______,   KC_1,   KC_2,   KC_3, KC_ENT,_______,
+        _______,_______,_______,_______,_______,_______,                      _______,   KC_3,   KC_2,   KC_3, KC_ENT,_______,
         _______,_______,_______,_______,_______,_______,                      _______,   KC_0,   KC_0, KC_DOT, KC_ENT,_______,
                                         _______,_______,_______,      _______,_______,_______
     ),
@@ -96,10 +93,10 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
     LAYOUT(
         'L', 'L', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', 'R', 'R',
         'L', 'L', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', 'R', 'R',
-        '*', 'L', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', 'R', 'R',
+        '*', '*', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', '*', '*',
         'L', 'L', 'L', 'L', 'L', 'L',            'R', 'R', 'R', 'R', 'R', 'R',
         'L', 'L', 'L', 'L', 'L', 'L',            'R', 'R', 'R', 'R', 'R', 'R',
-                            '*', '*', '*',  '*', '*', '*'
+                            '*', '*', '*',  'R', '*', '*'
 );
 
 extern rgb_config_t rgb_matrix_config;
@@ -244,6 +241,21 @@ bool rgb_matrix_indicators_user(void) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_select_word(keycode, record)) { return false; }
     switch (keycode) {
+        case LNUM_TM:
+            if (record->tap.count > 0) {
+                if (record->event.pressed) {
+                    register_code16(LCTL(KC_A));
+                } else {
+                    unregister_code16(LCTL(KC_A));
+                }
+            } else {
+                if (record->event.pressed) {
+                    layer_on(4);
+                } else {
+                    layer_off(4);
+                }
+            }
+      return false;
         case SELWBAK:  // Backward word selection.
             if (record->event.pressed) {
                 select_word_register('B');
