@@ -6,14 +6,14 @@
 #define ML_SAFE_RANGE SAFE_RANGE
 
 enum layers {
-    MAC,
-    WIN,
+    BASE_MAC,
+    BASE_WIN,
     SYMB,
     NUM,
     NAV,
 };
 
-enum custom_keycodes { RGB_SLD = SAFE_RANGE, SELWFWD, SELWBAK, SELLINE, ST_MACRO_0, TMUX_L };
+enum custom_keycodes { RGB_SLD = SAFE_RANGE, SELWFWD, SELWBAK, SELLINE, ST_MACRO_0 };
 enum tap_dance_codes { DFM, DFW };
 
 // home row mods
@@ -23,8 +23,9 @@ enum tap_dance_codes { DFM, DFW };
 #define CTL_QUT MT(MOD_RCTL, KC_QUOT)
 // layer mods
 #define LSYM_BS LT(SYMB, KC_BSPC)
-// tmux leader
-#define LNUM_TM LT(NUM, KC_P)
+
+#define LNAV_TM LT(NAV, KC_P)
+#define LNAV_PW LT(NAV, KC_O)
 #define LTHMB LT(NUM, KC_NO)
 // media keys
 #define MEDPT KC_MEDIA_PREV_TRACK
@@ -43,22 +44,22 @@ const key_override_t **key_overrides = (const key_override_t *[]){&only_bktk, &o
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [MAC] = LAYOUT(
+    [BASE_MAC] = LAYOUT(
         XXXXXXX,   KC_1,   KC_2,   KC_3,   KC_4,   KC_5,XXXXXXX,       XXXXXXX,   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,TD(DFW),
         KC_TAB,    KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,XXXXXXX,       XXXXXXX,   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,KC_BSLS,
-        CTL_ESC,  ALT_A,   KC_S,   KC_D,   KC_F,   KC_G,XXXXXXX,       XXXXXXX,   KC_H,   KC_J,   KC_K,   KC_L,ALT_SCN,CTL_QUT,
+        CTL_ESC,   KC_A,   KC_S,   KC_D,   KC_F,   KC_G,XXXXXXX,       XXXXXXX,   KC_H,   KC_J,   KC_K,   KC_L,KC_SCLN,KC_QUOT,
         KC_LSFT,   KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,                          KC_N,   KC_M,KC_COMM, KC_DOT,KC_SLSH,XXXXXXX,
-        XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,KC_LGUI,XXXXXXX,                       XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
-                                        LSYM_BS, KC_DEL,  LTHMB,       LNUM_TM, KC_ENT, KC_SPC
+        XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,KC_LGUI,XXXXXXX,                       XXXXXXX,KC_RALT,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
+                                        LSYM_BS, KC_DEL,  LTHMB,       LNAV_TM, KC_ENT, KC_SPC
     ),
 
-    [WIN] = LAYOUT(
+    [BASE_WIN] = LAYOUT(
         _______,_______,_______,_______,_______,_______,_______,       _______,_______,_______,_______,_______,_______,TD(DFM),
         _______,_______,_______,_______,_______,_______,_______,       _______,_______,_______,_______,_______,_______,_______,
         _______,_______,_______,_______,_______,_______,_______,       _______,_______,_______,_______,_______,_______,_______,
         _______,_______,_______,_______,_______,_______,                       _______,_______,_______,_______,_______,_______,
-        _______,KC_LGUI,_______,_______,KC_LALT,_______,                       _______,_______,_______,_______,_______,_______,
-                                        _______,_______,_______,    ST_MACRO_0,_______,_______
+        KC_LCTL,KC_LGUI,_______,_______,KC_LALT,_______,                       _______,_______,_______,_______,_______,_______,
+                                        LSYM_BS,_______,_______,       LNAV_PW,_______,_______
     ),
 
     [SYMB] = LAYOUT(
@@ -72,9 +73,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [NUM] = LAYOUT(
         _______,_______,_______,_______,_______,_______,_______,      _______,_______, KC_TAB,KC_PSLS,KC_PAST,KC_MINS,_______,
-        _______,_______,_______,_______,_______,_______,_______,      _______,_______,   KC_7,   KC_8,   KC_9,KC_PLUS,_______,
+        _______,_______,_______,_______,_______,_______,_______,      _______,_______,   KC_7,   KC_8,   KC_9,KC_PLUS,KC_BSPC,
         _______,_______,_______,_______,_______,_______,_______,      _______,_______,   KC_4,   KC_5,   KC_6,KC_PLUS,_______,
-        _______,_______,_______,_______,_______,_______,                      _______,   KC_3,   KC_2,   KC_3, KC_ENT,_______,
+        _______,_______,_______,_______,_______,_______,                      _______,   KC_1,   KC_2,   KC_3, KC_ENT,_______,
         _______,_______,_______,_______,_______,_______,                      _______,   KC_0,   KC_0, KC_DOT, KC_ENT,_______,
                                         _______,_______,_______,      _______,_______,_______
     ),
@@ -106,7 +107,7 @@ void keyboard_post_init_user(void) {
 }
 
 const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
-    [MAC] = {
+    [BASE_MAC] = {
               {0,0,0},     {0,0,255},     {0,0,255},     {0,0,255},       {0,0,0},
         {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
         {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
@@ -123,7 +124,7 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
               {0,0,0},       {0,0,0},       {0,0,0},   {0,255,255},   {0,255,255},       {0,0,0},       {0,0,0}
     },
 
-    [WIN] = {
+    [BASE_WIN] = {
               {0,0,0},     {0,0,255},     {0,0,255},     {0,0,255},       {0,0,0},
         {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},  {74,255,246},
         {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
@@ -209,12 +210,19 @@ void set_layer_color(int layer) {
     }
 }
 
+static uint8_t active_layer_for_colors(void) {
+    uint8_t top_overlay = get_highest_layer(layer_state);          // momentary/toggle layers
+    if (top_overlay != 0) return top_overlay;                      // any overlay beats the base
+    return get_highest_layer(default_layer_state);                 // current default/base layer
+}
+
 bool rgb_matrix_indicators_user(void) {
-    if (rawhid_state.rgb_control) {
-        return false;
-    }
+    if (rawhid_state.rgb_control) {return false; }
     if (keyboard_config.disable_layer_led) { return false; }
-    switch (biton32(layer_state)) {
+
+    uint8_t layer = active_layer_for_colors();
+
+    switch (layer) {
         case 0:
             set_layer_color(0);
             break;
@@ -241,7 +249,7 @@ bool rgb_matrix_indicators_user(void) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_select_word(keycode, record)) { return false; }
     switch (keycode) {
-        case LNUM_TM:
+        case LNAV_TM:
             if (record->tap.count > 0) {
                 if (record->event.pressed) {
                     register_code16(LCTL(KC_A));
@@ -250,12 +258,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             } else {
                 if (record->event.pressed) {
-                    layer_on(4);
+                    layer_on(NAV);
                 } else {
-                    layer_off(4);
+                    layer_off(NAV);
                 }
             }
       return false;
+        case LNAV_PW:
+
+            if (record->tap.count > 0) {
+                if (record->event.pressed) {
+                    SEND_STRING(
+                    SS_TAP(X_D)SS_DELAY(25) SS_LSFT(SS_TAP(X_R))SS_DELAY(25) SS_TAP(X_C)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_5))SS_DELAY(25)                                                     SS_LSFT(SS_TAP(X_MINUS))SS_DELAY(25) SS_TAP(X_B)SS_DELAY(25) SS_TAP(X_1)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_F))SS_DELAY(25)
+                    SS_TAP(X_5)SS_DELAY(25) SS_TAP(X_Y)
+                );}
+            } else {
+                if (record->event.pressed) {
+                    layer_on(NAV);
+                } else {
+                    layer_off(NAV);
+                }
+            }
+        return false;
         case SELWBAK:  // Backward word selection.
             if (record->event.pressed) {
                 select_word_register('B');
@@ -280,15 +304,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
 
-        case ST_MACRO_0:
-            if (record->event.pressed) {
-                SEND_STRING(
-                SS_TAP(X_D)SS_DELAY(25) SS_LSFT(SS_TAP(X_R))SS_DELAY(25) SS_TAP(X_C)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_5))SS_DELAY(25)                                                     SS_LSFT(SS_TAP(X_MINUS))SS_DELAY(25) SS_TAP(X_B)SS_DELAY(25) SS_TAP(X_1)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_F))SS_DELAY(25)
-                SS_TAP(X_5)SS_DELAY(25) SS_TAP(X_Y)
-            );
-            }
-            break;
-
+        // case ST_MACRO_0:
+        //     if (record->event.pressed) {
+        //         SEND_STRING(
+        //         SS_TAP(X_D)SS_DELAY(25) SS_LSFT(SS_TAP(X_R))SS_DELAY(25) SS_TAP(X_C)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_5))SS_DELAY(25)                                                     SS_LSFT(SS_TAP(X_MINUS))SS_DELAY(25) SS_TAP(X_B)SS_DELAY(25) SS_TAP(X_1)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_F))SS_DELAY(25)
+        //         SS_TAP(X_5)SS_DELAY(25) SS_TAP(X_Y)
+        //     );
+        //     }
+        //     break;
+        //
         case RGB_SLD:
             if (rawhid_state.rgb_control) {
                 return false;
@@ -336,7 +360,7 @@ void dance_0_reset(tap_dance_state_t *state, void *user_data);
 void dance_0_finished(tap_dance_state_t *state, void *user_data) {
     dance_state[0].step = dance_step(state);
     switch (dance_state[0].step) {
-        case DOUBLE_TAP: layer_move(1); break;
+        case DOUBLE_TAP: set_single_persistent_default_layer(BASE_WIN); break;
     }
 }
 
@@ -353,7 +377,7 @@ void dance_1_reset(tap_dance_state_t *state, void *user_data);
 void dance_1_finished(tap_dance_state_t *state, void *user_data) {
     dance_state[1].step = dance_step(state);
     switch (dance_state[1].step) {
-        case DOUBLE_TAP: layer_move(0); break;
+        case DOUBLE_TAP: set_single_persistent_default_layer(BASE_MAC); break;
     }
 }
 
