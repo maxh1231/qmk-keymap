@@ -263,8 +263,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->tap.count > 0) {
                 if (record->event.pressed) {
                     SEND_STRING(
-                    SS_TAP(X_D)SS_DELAY(25) SS_LSFT(SS_TAP(X_R))SS_DELAY(25) SS_TAP(X_C)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_5))SS_DELAY(25)                                                     SS_LSFT(SS_TAP(X_MINUS))SS_DELAY(25) SS_TAP(X_B)SS_DELAY(25) SS_TAP(X_1)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_F))SS_DELAY(25)
-                    SS_TAP(X_5)SS_DELAY(25) SS_TAP(X_Y)
+                    SS_TAP(X_X)SS_DELAY(25) SS_TAP(X_K)SS_DELAY(25) SS_LSFT(SS_TAP(X_Q))SS_DELAY(25) SS_LSFT(SS_TAP(X_DOT)SS_DELAY(25)) SS_TAP(X_D)SS_DELAY(25)                                                     SS_LSFT(SS_TAP(X_V))SS_DELAY(25) SS_TAP(X_W)SS_DELAY(25) SS_TAP(X_2)SS_DELAY(25) SS_LSFT(SS_TAP(X_DOT))SS_DELAY(25) SS_TAP(X_O)SS_DELAY(25)
+                    SS_LSFT(SS_TAP(X_E))SS_DELAY(25) SS_TAP(X_O)
                 );}
             } else {
                 if (record->event.pressed) {
