@@ -1,3 +1,4 @@
+#include "action_layer.h"
 #include "features/select_word.h"
 #include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
@@ -8,12 +9,19 @@
 enum layers {
     BASE_MAC,
     BASE_WIN,
+    GAMING,
     SYMB,
     NUM,
     NAV,
 };
 
-enum custom_keycodes { RGB_SLD = SAFE_RANGE, SELWFWD, SELWBAK, SELLINE, ST_MACRO_0 };
+enum custom_keycodes {
+    RGB_SLD = SAFE_RANGE,
+    SELWFWD,
+    SELWBAK,
+    SELLINE,
+    ST_MACRO_0
+};
 enum tap_dance_codes { DFM, DFW };
 
 // Tap: Ctrl, Hold: Esc
@@ -28,13 +36,21 @@ enum tap_dance_codes { DFM, DFW };
 #define MEDNT KC_MEDIA_NEXT_TRACK
 #define MEDPP KC_MEDIA_PLAY_PAUSE
 
-const key_override_t   only_bktk     = ko_make_with_layers(MOD_MASK_SHIFT, KC_GRV, KC_GRV, (1U << SYMB));
-const key_override_t   only_eql      = ko_make_with_layers(MOD_MASK_SHIFT, KC_EQL, KC_EQL, (1U << SYMB));
-const key_override_t   only_mins     = ko_make_with_layers(MOD_MASK_SHIFT, KC_MINS, KC_MINS, (1U << SYMB));
-const key_override_t   only_lbrc     = ko_make_with_layers(MOD_MASK_SHIFT, KC_LBRC, KC_LBRC, (1U << SYMB));
-const key_override_t   only_rbrc     = ko_make_with_layers(MOD_MASK_SHIFT, KC_RBRC, KC_RBRC, (1U << SYMB));
-const key_override_t   only_scln     = ko_make_with_layers(MOD_MASK_SHIFT, KC_SCLN, KC_SCLN, (1U << SYMB));
-const key_override_t **key_overrides = (const key_override_t *[]){&only_bktk, &only_eql, &only_mins, &only_lbrc, &only_rbrc, &only_scln, NULL};
+const key_override_t only_bktk =
+    ko_make_with_layers(MOD_MASK_SHIFT, KC_GRV, KC_GRV, (1U << SYMB));
+const key_override_t only_eql =
+    ko_make_with_layers(MOD_MASK_SHIFT, KC_EQL, KC_EQL, (1U << SYMB));
+const key_override_t only_mins =
+    ko_make_with_layers(MOD_MASK_SHIFT, KC_MINS, KC_MINS, (1U << SYMB));
+const key_override_t only_lbrc =
+    ko_make_with_layers(MOD_MASK_SHIFT, KC_LBRC, KC_LBRC, (1U << SYMB));
+const key_override_t only_rbrc =
+    ko_make_with_layers(MOD_MASK_SHIFT, KC_RBRC, KC_RBRC, (1U << SYMB));
+const key_override_t only_scln =
+    ko_make_with_layers(MOD_MASK_SHIFT, KC_SCLN, KC_SCLN, (1U << SYMB));
+const key_override_t **key_overrides =
+    (const key_override_t *[]){&only_bktk, &only_eql,  &only_mins, &only_lbrc,
+                               &only_rbrc, &only_scln, NULL};
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -45,6 +61,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSFT,   KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,                          KC_N,   KC_M,KC_COMM, KC_DOT,KC_SLSH,KC_RSFT,
         KC_LALT,XXXXXXX,XXXXXXX,XXXXXXX,KC_LGUI,XXXXXXX,                       XXXXXXX,KC_RALT,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
                                         LSYM_BS, KC_DEL,LNUM_NO,       LNAV_TM, KC_ENT, KC_SPC
+    ),
+
+    [GAMING] = LAYOUT(
+        XXXXXXX,   KC_1,   KC_2,   KC_3,   KC_4,   KC_5,XXXXXXX,       XXXXXXX,   KC_6,   KC_7,   KC_8,   KC_9,   KC_0,TD(DFM),
+        KC_TAB,    KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,XXXXXXX,       XXXXXXX,   KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,KC_BSLS,
+        CTL_ESC,   KC_A,   KC_S,   KC_D,   KC_F,   KC_G,XXXXXXX,       XXXXXXX,   KC_H,   KC_J,   KC_K,   KC_L,KC_SCLN,KC_QUOT,
+        KC_LSFT,   KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,                          KC_N,   KC_M,KC_COMM, KC_DOT,KC_SLSH,KC_RSFT,
+        KC_LALT,XXXXXXX,XXXXXXX,XXXXXXX,KC_LALT,XXXXXXX,                       XXXXXXX,KC_RALT,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
+                                        KC_BSPC, KC_DEL,LNUM_NO,       LNAV_TM, KC_ENT, KC_SPC
     ),
 
     [BASE_WIN] = LAYOUT(
@@ -109,6 +134,23 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
         {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
         {144,200,255},     {0,0,255},     {0,0,255},     {0,0,255},
               {0,0,0},       {0,0,0},       {0,0,0},   {0,255,255},   {0,255,255},       {0,0,0},       {0,0,0},
+              {0,0,0},     {0,0,255},     {0,0,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255},     {0,0,255},     {0,0,255},
+              {0,0,0},       {0,0,0},       {0,0,0},   {0,255,255},   {0,255,255},       {0,0,0},       {0,0,0}
+    },
+
+    [GAMING] = {
+              {0,0,0},     {0,0,255},     {0,0,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
+        {144,200,255},     {0,0,255},     {0,0,255},     {0,0,255},
+              {0,0,0},       {0,0,0},       {0,0,0},   {74,255,246},   {0,255,255},       {0,0,0},       {0,0,0},
               {0,0,0},     {0,0,255},     {0,0,255},     {0,0,255},       {0,0,0},
         {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
         {144,200,255},     {0,0,255}, {198,255,255},     {0,0,255},       {0,0,0},
@@ -321,6 +363,9 @@ enum {
     DOUBLE_TAP,
     DOUBLE_HOLD,
     DOUBLE_SINGLE_TAP,
+    TRIPLE_TAP,
+    TRIPLE_HOLD,
+    TRIPLE_SINGLE_TAP,
     MORE_TAPS
 };
 
@@ -335,6 +380,10 @@ uint8_t dance_step(tap_dance_state_t *state) {
         if (state->interrupted) return DOUBLE_SINGLE_TAP;
         else if (state->pressed) return DOUBLE_HOLD;
         else return DOUBLE_TAP;
+    } else if (state->count == 3) {
+        if (state->interrupted) return TRIPLE_SINGLE_TAP;
+        else if (state->pressed) return TRIPLE_HOLD;
+        else return TRIPLE_TAP;
     }
     return MORE_TAPS;
 }
@@ -346,6 +395,7 @@ void dance_0_finished(tap_dance_state_t *state, void *user_data) {
     dance_state[0].step = dance_step(state);
     switch (dance_state[0].step) {
         case DOUBLE_TAP: set_single_persistent_default_layer(BASE_WIN); break;
+        case TRIPLE_TAP: layer_move(GAMING); break;
     }
 }
 
@@ -362,7 +412,7 @@ void dance_1_reset(tap_dance_state_t *state, void *user_data);
 void dance_1_finished(tap_dance_state_t *state, void *user_data) {
     dance_state[1].step = dance_step(state);
     switch (dance_state[1].step) {
-        case DOUBLE_TAP: set_single_persistent_default_layer(BASE_MAC); break;
+        case DOUBLE_TAP: set_single_persistent_default_layer(BASE_MAC); layer_move(BASE_MAC); break;
     }
 }
 
